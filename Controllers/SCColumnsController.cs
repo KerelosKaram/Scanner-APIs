@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using TestBaseCopy.Dtos;
+using Scanner.Dtos;
 using TestBaseCopy.Helpers;
 
 namespace TestBaseCopy.Controllers
 {
-    public class SCColumnsController : BaseApiController
+    public class ScannerController : BaseApiController
     {
         private readonly DatabaseHelper _databaseHelper;
-        public SCColumnsController(DatabaseHelper databaseHelper)
+        private readonly string databaseName = "ScannerTest";
+        public ScannerController(DatabaseHelper databaseHelper)
         {
             _databaseHelper = databaseHelper;
         }
@@ -17,12 +18,21 @@ namespace TestBaseCopy.Controllers
         [HttpGet("SCColumnsSelect")]
         public async Task<ActionResult<IEnumerable<SCColumnsSelectDto>>> GetSCColumnsSelect()
         {
-            var databaseName = "ScannerTest";
-
             // Call the stored procedure and get the results as ScColumns
-            var SCColumnsSelect = await _databaseHelper.ExecuteStoredProcedureAsync<SCColumnsSelectDto>("SC_Columns_Select", databaseName, isQuery: true);
+            var SCColumnsSelect = 
+                await _databaseHelper.ExecuteStoredProcedureAsync<SCColumnsSelectDto>("SC_Columns_Select", databaseName, isQuery: true);
 
             return Ok(SCColumnsSelect);
         }
+
+        [HttpPost("SCColumnsInsert")]
+        public async Task<ActionResult<SCColumnsInsertDto>> SCColumnsInsertDto([FromBody] SCColumnsInsertDto sCColumnsInsertDto)
+        {
+
+            await _databaseHelper.ExecuteStoredProcedureAsync<SCColumnsInsertDto>("SC_Columns_Insert", databaseName, sCColumnsInsertDto , isQuery: false);
+            
+            return Ok();
+        }
+
     }
 }
