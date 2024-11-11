@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace TestBaseCopy.Controllers
+namespace Scanner.Controllers
 {
     [ApiController]
     [Route("api/")]
